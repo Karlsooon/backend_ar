@@ -5,8 +5,8 @@ import requests
 import openai
 import http.client
 from google.cloud import texttospeech
-from django.views.decorators.csrf import csrf_exempt
-from django.http import JsonResponse
+# from django.views.decorators.csrf import csrf_exempt
+# from django.http import JsonResponse
 import dotenv
 
 import os
