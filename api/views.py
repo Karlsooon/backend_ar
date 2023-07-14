@@ -7,6 +7,11 @@ import http.client
 from google.cloud import texttospeech
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
+import dotenv
+
+import os
+
+dotenv.load_dotenv()
 
 client = texttospeech.TextToSpeechClient()
 
@@ -38,7 +43,7 @@ def process_image(request):
 
             # Set the Google Cloud Vision API endpoint and API key
             endpoint = "https://vision.googleapis.com/v1/images:annotate"
-            api_key = "AIzaSyCYP2i5j5TOs3k8MwmFnvGVqoE0amU52A0"
+            api_key = os.environ.get('GOOGLE_CLOUD_API')
 
             # Send the image data to Google Cloud Vision API
             response = requests.post(
@@ -81,7 +86,8 @@ def generate_response(extracted_info):
     )
 
     # Set up the OpenAI API
-    openai.api_key = "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"
+    openai.api_key = os.environ.get('OPEN_AI_KEY')
+    # openai.api_key = "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"
 
     # Generate a response using ChatGPT
     response = openai.ChatCompletion.create(
@@ -102,7 +108,7 @@ def send_serper(response):
     conn = http.client.HTTPSConnection("google.serper.dev")
     payload = json.dumps({"q": response, "gl": "kz", "num": 20})
     headers = {
-        "X-API-KEY": "93ec7673945edb129002d825eacb90d68283fc58",
+        "X-API-KEY": os.environ.get('SERPER_KEY'),
         "Content-Type": "application/json",
     }
     conn.request("POST", "/search", payload, headers)
@@ -123,7 +129,7 @@ def get_result(extracted_info, response):
         + "you can add extra informations.Write it in one paragraph.Finish the sentences all time."
     )
 
-    openai.api_key = "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"
+    openai.api_key = os.environ.get('OPEN_AI_KEY')
 
     # Generate a response using ChatGPT
     response = openai.ChatCompletion.create(
@@ -140,22 +146,3 @@ def get_result(extracted_info, response):
     return result
 
 
-def register(request):
-    if request.method == "POST":
-        try:
-            # Retrieve registration data from the request
-            data = json.loads(request.body)
-            name = data["name"]
-            email = data["email"]
-            password = data["password"]
-
-            # Perform registration logic and save to the database
-            # Add your MongoDB code here to save the registration data
-
-            # Return a success response
-            return JsonResponse({"message": "Registration successful"})
-
-        except Exception as e:
-            return JsonResponse({"error": str(e)}, status=500)
-
-    return JsonResponse({"error": "Invalid request method"}, status=400)
