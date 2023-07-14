@@ -4,6 +4,11 @@ import base64
 import requests
 import openai
 import http.client
+from google.cloud import texttospeech
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
+
+client = texttospeech.TextToSpeechClient()
 
 
 def process_image(request):
@@ -68,38 +73,6 @@ def process_image(request):
     return JsonResponse({"error google lense": "Invalid request method"}, status=400)
 
 
-# def extract_info_from_json(json_response):
-#     # Implement your logic to extract information from the JSON response here
-#     # You can access the necessary fields and extract the required details
-
-#     # Example implementation:
-#     person_name = ""
-#     brand_name = ""
-#     movie_name = ""
-#     building_name = ""
-#     descriptions = []
-
-#     # Extract information from the JSON response
-#     if "responses" in json_response:
-#         response = json_response["responses"][0]
-#         if "webDetection" in response:
-#             web_detection = response["webDetection"]
-#             person_name = web_detection.get("bestGuessLabels", [])[0].get("label", "")
-#             brand_name = web_detection.get("webEntities", [])[0].get("description", "")
-#             # Extract more fields as needed
-
-#     extracted_info = {
-#         "person_name": person_name,
-#         "brand_name": brand_name,
-#         "movie_name": movie_name,
-#         "building_name": building_name,
-#         "descriptions": descriptions[:3],
-#     }
-#     # print(extracted_info)
-
-#     return extracted_info
-
-
 def generate_response(extracted_info):
     # Join the extracted information into a prompt string
     prompt = (
@@ -136,7 +109,7 @@ def send_serper(response):
     res = conn.getresponse()
     data = res.read()
     result = data.decode("utf-8")
-    print("serper"+result) 
+    print("serper" + result)
     return get_result(result, response)
     return data.decode("utf-8")
 
@@ -165,3 +138,24 @@ def get_result(extracted_info, response):
     print("RESULT!")
     print(result)
     return result
+
+
+def register(request):
+    if request.method == "POST":
+        try:
+            # Retrieve registration data from the request
+            data = json.loads(request.body)
+            name = data["name"]
+            email = data["email"]
+            password = data["password"]
+
+            # Perform registration logic and save to the database
+            # Add your MongoDB code here to save the registration data
+
+            # Return a success response
+            return JsonResponse({"message": "Registration successful"})
+
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=500)
+
+    return JsonResponse({"error": "Invalid request method"}, status=400)
