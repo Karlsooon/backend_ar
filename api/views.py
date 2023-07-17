@@ -83,7 +83,7 @@ def process_image(request):
 def generate_response(extracted_info):
     # Join the extracted information into a prompt string
     prompt = (
-        " Based on the provided JSON information, please extract common   person name, common  brand name,common  building name,common   movie name.use the article permalinks. And print only value dont write key \n"
+        " Based on the provided JSON information, please extract common   person name, common  brand name,common  building name,common   movie name, common the first 5 words with high score.use the article permalinks. And print only value dont write key \n"
         + str(extracted_info)
     )
 
