@@ -6,6 +6,7 @@ import openai
 import http.client
 from google.cloud import texttospeech
 from google.auth import credentials
+
 # from django.views.decorators.csrf import csrf_exempt
 # from django.http import JsonResponse
 import dotenv
@@ -44,7 +45,7 @@ def process_image(request):
 
             # Set the Google Cloud Vision API endpoint and API key
             endpoint = "https://vision.googleapis.com/v1/images:annotate"
-            api_key = os.environ.get('GOOGLE_CLOUD_API')
+            api_key = os.environ.get("GOOGLE_CLOUD_API")
 
             # Send the image data to Google Cloud Vision API
             response = requests.post(
@@ -87,7 +88,7 @@ def generate_response(extracted_info):
     )
 
     # Set up the OpenAI API
-    openai.api_key = os.environ.get('OPEN_AI_KEY')
+    openai.api_key = os.environ.get("OPEN_AI_KEY")
     # openai.api_key = "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"
 
     # Generate a response using ChatGPT
@@ -106,10 +107,11 @@ def generate_response(extracted_info):
 
 
 def send_serper(response):
+    print("serper in")
     conn = http.client.HTTPSConnection("google.serper.dev")
-    payload = json.dumps({"q": response, "gl": "kz", "num": 20})
+    payload = json.dumps({"q": response, "gl": "kz", "num": 10})
     headers = {
-        "X-API-KEY": os.environ.get('SERPER_KEY'),
+        "X-API-KEY": os.environ.get("SERPER_KEY"),
         "Content-Type": "application/json",
     }
     conn.request("POST", "/search", payload, headers)
@@ -130,7 +132,7 @@ def get_result(extracted_info, response):
         + "you can add extra informations.Write it in one paragraph.Finish the sentences all time."
     )
 
-    openai.api_key = os.environ.get('OPEN_AI_KEY')
+    openai.api_key = os.environ.get("OPEN_AI_KEY")
 
     # Generate a response using ChatGPT
     response = openai.ChatCompletion.create(
@@ -145,5 +147,3 @@ def get_result(extracted_info, response):
     print("RESULT!")
     print(result)
     return result
-
-
