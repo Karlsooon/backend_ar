@@ -6,4 +6,4 @@ services:
     repo: https://github.com/Karlsooon/backend_ar.git
     region: frankfurt
     branch: main
-    startCommand: "python main.py runserver"
+    startCommand: "./build.sh"
