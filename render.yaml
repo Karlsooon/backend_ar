@@ -1,9 +1,15 @@
 services:
   - type: web
     name: backend_ar
-    runtime: python
+    runtime: docker
     plan: free
     repo: https://github.com/Karlsooon/backend_ar.git
     region: frankfurt
     branch: main
-    startCommand: "./build.sh"
+    # envVars:
+    #   - key: MONGO_URL
+    #     sync: false
+    # buildFilter:
+    #   paths:
+    #   - app/**
+  
