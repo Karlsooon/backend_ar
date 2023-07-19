@@ -80,7 +80,7 @@ def process_image(request):
 
         except Exception as e:
             print("Exception:", str(e))
-            return JsonResponse({"error google lense": str(e)}, status=500)
+            return JsonResponse({"error google lense": str(e)}, status=501)
 
     return JsonResponse({"error google lense": "Invalid request method"}, status=400)
 
