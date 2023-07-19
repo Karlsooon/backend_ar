@@ -6,6 +6,7 @@ import openai
 import http.client
 from google.cloud import texttospeech
 from google.auth import credentials
+import logging
 
 # from django.views.decorators.csrf import csrf_exempt
 # from django.http import JsonResponse
@@ -53,6 +54,9 @@ def process_image(request):
                 json=request_body,
                 headers={"Content-Type": "application/json"},
             )
+            response.raise_for_status()
+
+            logging.info(f"Google lens response code {response.status_code}")
 
             if response.status_code == 200:
                 # Successful response
