@@ -6,7 +6,6 @@ import openai
 import http.client
 from google.cloud import texttospeech
 from google.auth import credentials
-import logging
 
 # from django.views.decorators.csrf import csrf_exempt
 # from django.http import JsonResponse
@@ -20,7 +19,6 @@ client = texttospeech.TextToSpeechClient()
 
 
 def process_image(request):
-    logging.info("Processing image...")
     if request.method == "POST":
         try:
             # Get the image from the request
@@ -31,8 +29,6 @@ def process_image(request):
 
             # Convert image data to base64 encoding
             base64_image = base64.b64encode(content).decode("utf-8")
-
-            logging.info("Image size", len(base64_image))
 
             # Prepare the request body for Google Cloud Vision API
             request_body = {
@@ -57,22 +53,19 @@ def process_image(request):
                 json=request_body,
                 headers={"Content-Type": "application/json"},
             )
-            response.raise_for_status()
-
-            logging.info(f"Google lens response code {response.status_code}")
 
             if response.status_code == 200:
                 # Successful response
                 json_response = response.json()
-                logging.info("JSON response", json.dumps(json_response, indent=4))
+                print("*****************************************")
+                print(json.dumps(json_response, indent=4))
+                print("*****************************************")
 
                 # Process the JSON response
                 # extracted_info = extract_info_from_json(json_response)
 
                 # Use ChatGPT to generate a response
-                generated_response = generate_response(
-                    json.dumps(json_response, indent=4)
-                )
+                generated_response = generate_response(json_response)
 
                 return HttpResponse(generated_response)
 
@@ -81,8 +74,8 @@ def process_image(request):
                 print(f"Error google lense: {response.status_code} - {response.text}")
 
         except Exception as e:
-            logging.exception("Google lense error")
-            return JsonResponse({"error google lense": str(e)}, status=501)
+            print(str(e))
+            return JsonResponse({"error google lense": str(e)}, status=500)
 
     return JsonResponse({"error google lense": "Invalid request method"}, status=400)
 
@@ -117,7 +110,6 @@ def send_serper(response):
     print("serper in")
     conn = http.client.HTTPSConnection("google.serper.dev")
     payload = json.dumps({"q": response, "gl": "kz", "num": 10})
-    print(payload)
     headers = {
         "X-API-KEY": os.environ.get("SERPER_KEY"),
         "Content-Type": "application/json",
@@ -154,39 +146,4 @@ def get_result(extracted_info, response):
     result = response.choices[0].message.content
     print("RESULT!")
     print(result)
-    return result
-
-
-def get_chat_gpt_response(request):
-    if request.method == "POST":
-        try:
-            # Get the content from the request
-            content = request.POST.get("content", "")
-
-            # Generate a response using ChatGPT
-            generated_response = generate_chat_gpt_response(content)
-
-            # Return the response as JSON
-            return JsonResponse({"response": generated_response})
-
-        except Exception as e:
-            print(str(e))
-            return JsonResponse({"error": str(e)}, status=500)
-
-    return JsonResponse({"error": "Invalid request method"}, status=400)
-
-
-def generate_chat_gpt_response(content):
-    # Set up the OpenAI API
-    openai.api_key = os.environ.get("OPEN_AI_KEY")
-
-    # Generate a response using ChatGPT
-    response = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo",
-        messages=[{"role": "user", "content": content}],
-        max_tokens=100,
-        n=1,
-        temperature=0.7,
-    )
-    result = response.choices[0].message.content.strip()
     return result
