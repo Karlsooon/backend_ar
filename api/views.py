@@ -32,6 +32,8 @@ def process_image(request):
             # Convert image data to base64 encoding
             base64_image = base64.b64encode(content).decode("utf-8")
 
+            logging.info("Image size", len(base64_image))
+
             # Prepare the request body for Google Cloud Vision API
             request_body = {
                 "requests": [
@@ -62,15 +64,15 @@ def process_image(request):
             if response.status_code == 200:
                 # Successful response
                 json_response = response.json()
-                print("*****************************************")
-                print(json.dumps(json_response, indent=4))
-                print("*****************************************")
+                logging.info("JSON response", json.dumps(json_response, indent=4))
 
                 # Process the JSON response
                 # extracted_info = extract_info_from_json(json_response)
 
                 # Use ChatGPT to generate a response
-                generated_response = generate_response(json_response)
+                generated_response = generate_response(
+                    json.dumps(json_response, indent=4)
+                )
 
                 return HttpResponse(generated_response)
 
