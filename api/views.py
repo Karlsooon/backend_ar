@@ -20,6 +20,7 @@ client = texttospeech.TextToSpeechClient()
 
 
 def process_image(request):
+    print("Processing image...")
     if request.method == "POST":
         try:
             # Get the image from the request
@@ -78,7 +79,7 @@ def process_image(request):
                 print(f"Error google lense: {response.status_code} - {response.text}")
 
         except Exception as e:
-            print(str(e))
+            print("Exception:", str(e))
             return JsonResponse({"error google lense": str(e)}, status=500)
 
     return JsonResponse({"error google lense": "Invalid request method"}, status=400)
