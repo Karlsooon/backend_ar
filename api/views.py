@@ -117,6 +117,7 @@ def send_serper(response):
     print("serper in")
     conn = http.client.HTTPSConnection("google.serper.dev")
     payload = json.dumps({"q": response, "gl": "kz", "num": 10})
+    print(payload)
     headers = {
         "X-API-KEY": os.environ.get("SERPER_KEY"),
         "Content-Type": "application/json",
