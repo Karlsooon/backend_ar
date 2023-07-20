@@ -147,3 +147,5 @@ def get_result(extracted_info, response):
     print("RESULT!")
     print(result)
     return result
+
+
