@@ -129,7 +129,7 @@ def get_result(extracted_info, response):
         + str(response)
         + "in /n"
         + str(extracted_info)
-        + "you can add extra informations.Write it in one paragraph.Finish the sentences all time."
+        + "you can add extra informations.Write it in one paragraph and in 3 sentence.Finish the sentences all time."
     )
 
     openai.api_key = os.environ.get("OPEN_AI_KEY")
@@ -149,3 +149,33 @@ def get_result(extracted_info, response):
     return result
 
 
+def chat_with_chatgpt(request):
+    if request.method == "POST":
+        try:
+            # Get the user message from the request
+            data = json.loads(request.body)
+            user_message = data.get("message")
+
+            # Set up the OpenAI API
+            openai.api_key = os.environ.get("OPEN_AI_KEY")
+
+            # Generate a response using ChatGPT
+            response = openai.Completion.create(
+                engine="text-davinci-002",  # Use the GPT-3.5 Turbo engine
+                prompt=user_message,
+                max_tokens=100,
+                n=1,
+                temperature=0.7,
+            )
+
+            # Extract the generated response from ChatGPT
+            generated_response = response.choices[0].text
+
+            # Send the generated response back to the frontend
+            return JsonResponse({"response": generated_response})
+
+        except Exception as e:
+            print(str(e))
+            return JsonResponse({"error": str(e)}, status=500)
+
+    return JsonResponse({"error": "Invalid request method"}, status=400)
