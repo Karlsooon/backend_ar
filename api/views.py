@@ -125,11 +125,11 @@ def send_serper(response):
 
 def get_result(extracted_info, response):
     prompt = (
-        "From the extracted JSON information above and the previous ChatGPT response, please tell me more about the content.\n"
-        + str(response)
-        + "in/n"
+        # "From the extracted JSON information above and the previous ChatGPT response, please tell me more about the content.\n"
+        # + str(response)
+        # + "in/n"
         + "From the information below, can you describe the words mentioned above in 3 sentences? Avoid cutting off sentences, and don't include words like 'from this JSON information,' etc. Provide only the generated 3 sentences.\n"
-        + str(extracted_info)
+        + str(response)
     )
 
     openai.api_key = os.environ.get("OPEN_AI_KEY")
