@@ -127,9 +127,11 @@ def get_result(extracted_info, response):
     prompt = (
         " From using given json information tell me about /n"
         + str(response)
-        + "in /n"
+        + "in/n" + 'From info below can you describe words above in 3 sentences.'
         + str(extracted_info)
         + "Describe in 3 sentence!.Finish the all sentence dont cut off.And dont write words like - from this json information,and so on write only  just generated 3 sentence."
+        + " From using given json information tell me about /n"
+        + str(response)
     )
 
     openai.api_key = os.environ.get("OPEN_AI_KEY")
