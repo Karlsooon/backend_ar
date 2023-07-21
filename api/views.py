@@ -83,7 +83,7 @@ def process_image(request):
 def generate_response(extracted_info):
     # Join the extracted information into a prompt string
     prompt = (
-        " Based on the provided JSON information, please extract common   person name, common  brand name,common  building name,common   movie name, common the first 5 words with high score.use the article permalinks. And print only value dont write key \n"
+        " Based on the provided JSON information, please extract common   person name, common  brand name,common  building name,common   movie name, the first 5 words with high score.use the article permalinks. And print only value dont write key \n"
         + str(extracted_info)
     )
 
@@ -129,7 +129,7 @@ def get_result(extracted_info, response):
         + str(response)
         + "in /n"
         + str(extracted_info)
-        + "you can add extra informations.Write it in one paragraph and in 3 sentence.Finish the sentences all time."
+        + "you can add extra informations.Write it in 3 sentence.Finish the sentence all time.nad dont write words like - from this json information,and so on write only  just generated 3 words."
     )
 
     openai.api_key = os.environ.get("OPEN_AI_KEY")
