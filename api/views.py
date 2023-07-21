@@ -83,7 +83,7 @@ def process_image(request):
 def generate_response(extracted_info):
     # Join the extracted information into a prompt string
     prompt = (
-        " Based on the provided JSON information, please extract common   person name, common  brand name,common  building name,common   movie name, the first 5 words with high score.use the article permalinks. And print only value dont write key \n"
+        "Based on the provided JSON information from Google Cloud Vision API, please extract common person names, common brand names, common building names, and common movie names. Also, include the first 5 words with high scores. Use the article permalinks. Only provide the values, and avoid writing the keys.\n"
         + str(extracted_info)
     )
 
@@ -125,13 +125,11 @@ def send_serper(response):
 
 def get_result(extracted_info, response):
     prompt = (
-        " From using given json information tell me about /n"
+        "From the extracted JSON information above and the previous ChatGPT response, please tell me more about the content.\n"
         + str(response)
-        + "in/n" + 'From info below can you describe words above in 3 sentences.'
+        + "in/n"
+        + "From the information below, can you describe the words mentioned above in 3 sentences? Avoid cutting off sentences, and don't include words like 'from this JSON information,' etc. Provide only the generated 3 sentences.\n"
         + str(extracted_info)
-        + "Describe in 3 sentence!.Finish the all sentence dont cut off.And dont write words like - from this json information,and so on write only  just generated 3 sentence."
-        + " From using given json information tell me about /n"
-        + str(response)
     )
 
     openai.api_key = os.environ.get("OPEN_AI_KEY")
