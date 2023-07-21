@@ -129,7 +129,7 @@ def get_result(extracted_info, response):
         + str(response)
         + "in /n"
         + str(extracted_info)
-        + "you can add extra informations.Write it in 3 sentence.Finish the sentence all time.nad dont write words like - from this json information,and so on write only  just generated 3 words."
+        + "you can add extra informations.Tell it in 3 sentence!.Finish the sentence all time.nad dont write words like - from this json information,and so on write only  just generated 3 sentence."
     )
 
     openai.api_key = os.environ.get("OPEN_AI_KEY")
