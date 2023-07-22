@@ -2,7 +2,8 @@ from django.urls import path
 from api import views
 
 urlpatterns = [
-    path('process_image', views.process_image),
+    path("process_image", views.process_image),
+    path("chat_with_chatgpt", views.chat_with_chatgpt, name="chat_with_chatgpt"),
     # path('register', views.register),
-    # path('get_result', views.get_result), 
+    # path('get_result', views.get_result),
 ]

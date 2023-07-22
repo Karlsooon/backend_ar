@@ -125,10 +125,11 @@ def send_serper(response):
 
 def get_result(extracted_info, response):
     prompt = (
-        # "From the extracted JSON information above and the previous ChatGPT response, please tell me more about the content.\n"
-        # + str(response)
-        # + "in/n"
-        +"From the information below, can you describe the words mentioned below in 3 sentences? Avoid cutting off sentences, and don't include words like 'from this JSON information,' etc. Provide only the generated 3 sentences.\n"
+        "From the extracted JSON information above and the previous ChatGPT response, please tell me more about the content.\n"
+        + str(response)
+        + "in/n"
+        + str(extracted_info)
+        + "From the information below, can you describe the words mentioned below in 3 sentences? Avoid cutting off sentences, and don't include words like 'from this JSON information,' etc. Provide only the generated 3 sentences that will describe the response words in 3 sentence.It can be the description of the word like what is it who is it if person and like this.Dont write what words you see in json just describe them.As a 1 paragraph create history\n"
         + str(response)
     )
 
@@ -147,32 +148,3 @@ def get_result(extracted_info, response):
     print("RESULT!")
     print(result)
     return result
-
-
-def chat_with_chatgpt(request):
-    if request.method == "POST":
-        try:
-            # Get the user message from the request
-            data = json.loads(request.body)
-            user_message = data.get("message")
-
-            # Generate a response using ChatGPT
-            response = openai.ChatCompletion.create(
-                model="gpt-3.5-turbo",
-                messages=[{"role": "user", "content": user_message}],
-                max_tokens=100,
-                n=1,
-                temperature=0.7,
-            )
-
-            # Extract the generated response from ChatGPT
-            generated_response = response.choices[0].message["content"]
-
-            # Return the generated response to the frontend
-            return JsonResponse({"response": generated_response})
-
-        except Exception as e:
-            print(str(e))
-            return JsonResponse({"error": str(e)}, status=500)
-
-    return JsonResponse({"error": "Invalid request method"}, status=400)
