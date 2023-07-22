@@ -83,7 +83,7 @@ def process_image(request):
 def generate_response(extracted_info):
     # Join the extracted information into a prompt string
     prompt = (
-        "Based on the provided JSON information from Google Cloud Vision API, please extract common person names, common brand names, common building names, and common movie names. Also, include the first 5 words with high scores. Use the article permalinks. Only provide the values, and avoid writing the keys.\n"
+        "Based on the provided JSON information from Google Cloud Vision API, please extract common person names, common brand names, common building names, and common movie names. Also, include the first 5 words with high scores. Use the article permalinks. Only provide the values, and avoid writing the keys.And please always end the sentences.End sentences with dote(.).And end last sentense.End last sentence with dote(.) \n"
         + str(extracted_info)
     )
 
