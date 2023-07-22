@@ -128,7 +128,7 @@ def get_result(extracted_info, response):
         # "From the extracted JSON information above and the previous ChatGPT response, please tell me more about the content.\n"
         # + str(response)
         # + "in/n"
-        + "From the information below, can you describe the words mentioned above in 3 sentences? Avoid cutting off sentences, and don't include words like 'from this JSON information,' etc. Provide only the generated 3 sentences.\n"
+        +"From the information below, can you describe the words mentioned below in 3 sentences? Avoid cutting off sentences, and don't include words like 'from this JSON information,' etc. Provide only the generated 3 sentences.\n"
         + str(response)
     )
 
@@ -156,22 +156,19 @@ def chat_with_chatgpt(request):
             data = json.loads(request.body)
             user_message = data.get("message")
 
-            # Set up the OpenAI API
-            openai.api_key = os.environ.get("OPEN_AI_KEY")
-
             # Generate a response using ChatGPT
-            response = openai.Completion.create(
-                engine="text-davinci-002",  # Use the GPT-3.5 Turbo engine
-                prompt=user_message,
+            response = openai.ChatCompletion.create(
+                model="gpt-3.5-turbo",
+                messages=[{"role": "user", "content": user_message}],
                 max_tokens=100,
                 n=1,
                 temperature=0.7,
             )
 
             # Extract the generated response from ChatGPT
-            generated_response = response.choices[0].text
+            generated_response = response.choices[0].message["content"]
 
-            # Send the generated response back to the frontend
+            # Return the generated response to the frontend
             return JsonResponse({"response": generated_response})
 
         except Exception as e:
