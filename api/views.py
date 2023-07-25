@@ -103,36 +103,30 @@ def generate_response(extracted_info):
     )
     result = response.choices[0].message.content
     print(result)
-    return send_serper(result)
+    # return send_serper(result)
+    return get_result(response)
     return response.choices[0].message.content
 
 
-def send_serper(response):
-    print("serper in")
-    conn = http.client.HTTPSConnection("google.serper.dev")
-    payload = json.dumps({"q": response, "gl": "kz", "num": 10})
-    headers = {
-        "X-API-KEY": os.environ.get("SERPER_KEY"),
-        "Content-Type": "application/json",
-    }
-    conn.request("POST", "/search", payload, headers)
-    res = conn.getresponse()
-    data = res.read()
-    result = data.decode("utf-8")
-    print("serper" + result)
-    return get_result(result, response)
-    return data.decode("utf-8")
+# def send_serper(response):
+#     print("serper in")
+#     conn = http.client.HTTPSConnection("google.serper.dev")
+#     payload = json.dumps({"q": response, "gl": "kz", "num": 10})
+#     headers = {
+#         "X-API-KEY": os.environ.get("SERPER_KEY"),
+#         "Content-Type": "application/json",
+#     }
+#     conn.request("POST", "/search", payload, headers)
+#     res = conn.getresponse()
+#     data = res.read()
+#     result = data.decode("utf-8")
+#     print("serper" + result)
+#     return get_result(result, response)
+#     return data.decode("utf-8")
 
 
-def get_result(extracted_info, response):
-    prompt = (
-        "From the extracted JSON information,please tell me more about the words below,describe them in 3 sentence.Create one paragraph history about them and tell it.Dont contain word 'json' in paragraph.And always end the sentence.\n"
-        + str(response)
-        + "in/n"
-        + str(extracted_info)
-        + "From the information below, can you describe the words mentioned below in 3 sentences? Avoid cutting off sentences, and don't include words like 'from this JSON information,' etc.Dont tell about json.In you sentence dont contain word 'JSON' or 'Json' or 'json'. Provide only the generated in 3 sentences that will describe the response words in 3 sentence.It can be the description of the word like what is it who is it if person and like this.Dont write what words you see in json just describe them.As a 1 paragraph create history\n"
-        + str(response)
-    )
+def get_result(response):
+    prompt = ("please tell me about " + response + "in 3 sentences one paragraph. Create history and with describing thiis words.And always end the sentence")
 
     openai.api_key = os.environ.get("OPEN_AI_KEY")
 
