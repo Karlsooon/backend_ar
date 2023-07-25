@@ -126,7 +126,7 @@ def send_serper(response):
 
 def get_result(extracted_info, response):
     prompt = (
-        "From the extracted JSON information above and the previous ChatGPT response, please tell me more about the content in 3 sentence.\n"
+        "From the extracted JSON information above and the previous ChatGPT response, please tell me more about the words below,describe them in 3 sentence.Create one paragraph history about them.\n"
         + str(response)
         + "in/n"
         + str(extracted_info)
