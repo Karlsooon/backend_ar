@@ -7,6 +7,7 @@ import http.client
 from google.cloud import texttospeech
 from google.auth import credentials
 
+
 # from django.views.decorators.csrf import csrf_exempt
 # from django.http import JsonResponse
 import dotenv
@@ -148,3 +149,36 @@ def get_result(extracted_info, response):
     print("RESULT!")
     print(result)
     return result
+
+
+def chat_with_chatgpt(request):
+    if request.method == "POST":
+        try:
+            # Get the message from the request
+            message = request.POST.get("message", "")
+
+            # Use ChatGPT to generate a response
+            generated_response = generate_chat_response(message)
+
+            return JsonResponse({"response": generated_response})
+
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=500)
+
+    return JsonResponse({"error": "Invalid request method"}, status=400)
+
+
+def generate_chat_response(user_message):
+    # Set up the OpenAI API
+    openai.api_key = os.environ.get("OPEN_AI_KEY")
+
+    # Generate a response using ChatGPT
+    response = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo",
+        messages=[{"role": "user", "content": user_message}],
+        max_tokens=100,
+        n=1,
+        temperature=0.7,
+    )
+    generated_response = response.choices[0].message["content"]
+    return generated_response
