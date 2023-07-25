@@ -126,7 +126,7 @@ def generate_response(extracted_info):
 
 
 def get_result(response):
-    prompt = ("please tell me about " + response + "in 3 sentences one paragraph. Create history and with describing thiis words.And always end the sentence")
+    prompt = ("please tell me about " + response + "in 3 sentences and in one paragraph. Create history  with describing this response that i metion.And always end the sentence with dote(.).Dont include words like 'json' just create history paragraph.")
 
     openai.api_key = os.environ.get("OPEN_AI_KEY")
 
