@@ -126,11 +126,11 @@ def send_serper(response):
 
 def get_result(extracted_info, response):
     prompt = (
-        "From the extracted JSON information above and the previous ChatGPT response, please tell me more about the content.\n"
+        "From the extracted JSON information above and the previous ChatGPT response, please tell me more about the content in 3 sentence.\n"
         + str(response)
         + "in/n"
         + str(extracted_info)
-        + "From the information below, can you describe the words mentioned below in 3 sentences? Avoid cutting off sentences, and don't include words like 'from this JSON information,' etc. Provide only the generated 3 sentences that will describe the response words in 3 sentence.It can be the description of the word like what is it who is it if person and like this.Dont write what words you see in json just describe them.As a 1 paragraph create history\n"
+        + "From the information below, can you describe the words mentioned below in 3 sentences? Avoid cutting off sentences, and don't include words like 'from this JSON information,' etc.Dont tell about json.In you sentence dont contain word 'JSON' or 'Json' or 'json'. Provide only the generated in 3 sentences that will describe the response words in 3 sentence.It can be the description of the word like what is it who is it if person and like this.Dont write what words you see in json just describe them.As a 1 paragraph create history\n"
         + str(response)
     )
 
