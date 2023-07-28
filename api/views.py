@@ -172,7 +172,7 @@ def generate_chat_response(user_message):
     openai.api_key = os.environ.get("OPEN_AI_KEY")
 
     # Define the prompt message
-    prompt = "Talk about thems only appear to to other questions dont answer."
+    prompt = "Hi you can ask any question about this object....... "
 
     # Generate a response using ChatGPT
     response = openai.ChatCompletion.create(
