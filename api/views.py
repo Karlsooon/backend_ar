@@ -154,10 +154,11 @@ def get_result(extracted_info, response):
 def chat_with_chatgpt(request):
     if request.method == "POST":
         try:
+            print('before json response')
             data = json.loads(request.body)
-            # Get the message from the request
+            print(' Get the message from the request')
             message = data["message"]
-            # Use ChatGPT to generate a response
+            print('Use ChatGPT to generate a response')
             generated_response = generate_chat_response(message)
             return JsonResponse({"response": generated_response})
 
@@ -168,11 +169,13 @@ def chat_with_chatgpt(request):
 
 
 def generate_chat_response(user_message):
+    print('before key')
     # Set up the OpenAI API
     openai.api_key = os.environ.get("OPEN_AI_KEY")
 
     # Define the prompt message
     prompt = "Hi you can ask any question about this object....... "
+    print('before generating openai key')
 
     # Generate a response using ChatGPT
     response = openai.ChatCompletion.create(
@@ -186,7 +189,7 @@ def generate_chat_response(user_message):
         temperature=0.7,
     )
 
-    # Extract the generated response from ChatGPT's reply
+    print('Extract the generated response from ChatGPTs reply')
     generated_response = response.choices[0].message["content"]
 
     return generated_response
