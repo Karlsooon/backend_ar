@@ -138,7 +138,7 @@ def get_result(extracted_info, response):
         max_tokens=100,
         n=1,
         # stop=None,
-        temperature=0.7,
+        temperature=1,
     )
     result = response.choices[0].message.content
     print("RESULT!")
