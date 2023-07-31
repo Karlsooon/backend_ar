@@ -4,19 +4,14 @@ import base64
 import requests
 import openai
 import http.client
-from google.cloud import texttospeech
-from google.auth import credentials
-
-
-# from django.views.decorators.csrf import csrf_exempt
-# from django.http import JsonResponse
+import os
 import dotenv
 
-import os
 
+# Load environment variables
 dotenv.load_dotenv()
 
-client = texttospeech.TextToSpeechClient()
+# Initialize the OpenAI API
 
 
 def process_image(request):
@@ -126,11 +121,11 @@ def send_serper(response):
 
 def get_result(extracted_info, response):
     prompt = (
-        "From the extracted JSON information,please tell me more about the words below,describe them in 3 sentence.Create one paragraph history about them and tell it.Dont contain word 'json' in paragraph.And always end the sentence.\n"
+        "From the extracted JSON information,please tell me more about the words below,describe them in 3 sentence.Create one paragraph history about them and tell it.Dont contain word 'json' in paragraph.And always end the sentence.And please always end the sentences.End sentences with dote(.).And end last sentense.End last sentence with dote(.) \n"
         + str(response)
         + "in/n"
         + str(extracted_info)
-        + "From the information below, can you describe the words mentioned below in 3 sentences? Avoid cutting off sentences, and don't include words like 'from this JSON information,' etc.Dont tell about json.In you sentence dont contain word 'JSON' or 'Json' or 'json'. Provide only the generated in 3 sentences that will describe the response words in 3 sentence.It can be the description of the word like what is it who is it if person and like this.Dont write what words you see in json just describe them.As a 1 paragraph create history\n"
+        + "From the information below, can you describe the words mentioned below in 3 sentences? Avoid cutting off sentences, and don't include words like 'from this JSON information,' etc.Dont tell about json.In you sentence dont contain word 'JSON' or 'Json' or 'json'. Provide only the generated in 3 sentences that will describe the response words in 3 sentence.It can be the description of the word like what is it who is it if person and like this.Dont write what words you see in json just describe them.As a 1 paragraph create historyAnd please always end the sentences.End sentences with dote(.).And end last sentense.End last sentence with dote(.)\n"
         + str(response)
     )
 
@@ -154,11 +149,11 @@ def get_result(extracted_info, response):
 def chat_with_chatgpt(request):
     if request.method == "POST":
         try:
-            print('before json response')
+            print("before json response")
             data = json.loads(request.body)
-            print(' Get the message from the request')
+            print(" Get the message from the request")
             message = data["message"]
-            print('Use ChatGPT to generate a response')
+            print("Use ChatGPT to generate a response")
             generated_response = generate_chat_response(message)
             return JsonResponse({"response": generated_response})
 
@@ -169,13 +164,13 @@ def chat_with_chatgpt(request):
 
 
 def generate_chat_response(user_message):
-    print('before key')
+    print("before key")
     # Set up the OpenAI API
     openai.api_key = os.environ.get("OPEN_AI_KEY")
 
     # Define the prompt message
     prompt = "Hi you can ask any question about this object....... "
-    print('before generating openai key')
+    print("before generating openai key")
 
     # Generate a response using ChatGPT
     response = openai.ChatCompletion.create(
@@ -189,7 +184,10 @@ def generate_chat_response(user_message):
         temperature=0.7,
     )
 
-    print('Extract the generated response from ChatGPTs reply')
+    print("Extract the generated response from ChatGPTs reply")
     generated_response = response.choices[0].message["content"]
 
     return generated_response
+
+
+
