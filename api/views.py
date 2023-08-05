@@ -121,7 +121,7 @@ def send_serper(response):
 
 def get_result(extracted_info, response):
     prompt = (
-        "From the extracted JSON information,please tell me in one paragraph    more about the words below,describe them in 3 sentence.Create one paragraph history about them and tell it.Dont contain word 'json' in paragraph.And always end the sentence.And please always end the sentences.End sentences with dote(.).And end last sentense.End last sentence with dote(.) \n"
+        "From the extracted  information,please tell me in one paragraph    more about the words below,describe them in 3 sentence.Create one paragraph history about them and tell it.Dont contain word 'json' in paragraph.And always end the sentence.And please always end the sentences.End sentences with dote(.).And end last sentense.End last sentence with dote(.) \n"
         + str(response)
         + "in/n"
         + str(extracted_info)
