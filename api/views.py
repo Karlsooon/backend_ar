@@ -6,12 +6,97 @@ import openai
 import http.client
 import os
 import dotenv
+import spacy
 
 
 # Load environment variables
 dotenv.load_dotenv()
+nlp = spacy.load("en_core_web_sm")
+
 
 # Initialize the OpenAI API
+
+def search_person(request):
+    if request.method == "POST":
+        try:
+            # Get the user name from the request data sent by the frontend
+            data = json.loads(request.body)
+            user_name = data["message"]
+
+            # Call the function to extract the person's name from the user name
+            person_name = extract_person_name(user_name)
+
+            # Generate a chat response based on the extracted person's name
+            chat_response = generate_chat_response2(person_name)
+
+            # Return the chat response as a JSON response to the frontend
+            return JsonResponse({"response": chat_response})
+
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=500)
+
+    return JsonResponse({"error": "Invalid request method"}, status=400)
+
+
+def extract_person_name(user_message):
+    # Process the user message using spaCy NER
+    doc = nlp(user_message)
+
+    # Extract person names from the document
+    person_names = [ent.text for ent in doc.ents if ent.label_ == "PERSON"]
+
+    if person_names:
+        return send_serper2(person_names[0])  # Return the first person name found
+    else:
+        return "User"
+
+
+def generate_chat_response2(result, person_name):
+    # Set up the OpenAI API
+    openai.api_key = os.environ.get("OPEN_AI_KEY")
+
+    # Get the person's name from the user message
+
+    # Define the prompt message with the person's name
+    prompt = f"tell me about {person_name} from given JSON information {result}"
+
+    # Generate a response using ChatGPT
+    response = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo",
+        messages=[
+            {"role": "system", "content": prompt},
+            # {"role": "user", "content": person_name},
+        ],
+        max_tokens=100,
+        n=1,
+        temperature=0.7,
+    )
+
+    # Extract the generated response from ChatGPT's reply
+    generated_response = response.choices[0].message["content"]
+
+    # Send the person's name to "serper" service and get information
+    serper_response = send_serper2(person_name)
+
+    # Process the "serper" response and append it to the generated response
+    final_response = f"{generated_response}\n\n{serper_response}"
+
+    return final_response
+
+
+def send_serper2(person_name):
+    # Send the person's name to the "serper" service to get relevant information
+    conn = http.client.HTTPSConnection("google.serper.dev")
+    payload = json.dumps({"q": person_name, "gl": "kz", "num": 10})
+    headers = {
+        "X-API-KEY": os.environ.get("SERPER_KEY"),
+        "Content-Type": "application/json",
+    }
+    conn.request("POST", "/search", payload, headers)
+    res = conn.getresponse()
+    data = res.read()
+    result = data.decode("utf-8")
+    return generate_chat_response2(result, person_name)
 
 
 def process_image(request):
@@ -188,6 +273,3 @@ def generate_chat_response(user_message):
     generated_response = response.choices[0].message["content"]
 
     return generated_response
-
-
-
